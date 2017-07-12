@@ -1,0 +1,20 @@
+﻿  game_operation.c
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(89): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(89): warning C4024: “KillTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(90): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(90): warning C4024: “KillTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(91): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(91): warning C4024: “KillTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(94): warning C4047: “函数”:“LPCSTR”与“int”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(94): warning C4024: “MessageBoxA”: 形参和实参 2 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(99): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(99): warning C4024: “KillTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(100): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(100): warning C4024: “SetTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(106): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(106): warning C4024: “KillTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(107): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(107): warning C4024: “SetTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(125): warning C4029: 声明的形参表不同于定义
+  Gold Miner.vcxproj -> C:\Users\lenovo\documents\visual studio 2015\Projects\Gold Miner\Debug\Gold Miner.exe
+  Gold Miner.vcxproj -> C:\Users\lenovo\documents\visual studio 2015\Projects\Gold Miner\Debug\Gold Miner.pdb (Partial PDB)
