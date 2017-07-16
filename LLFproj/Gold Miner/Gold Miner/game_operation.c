@@ -1,21 +1,21 @@
-//---------Í·ÎÄ¼ş--------
+ï»¿//---------å¤´æ–‡ä»¶--------
 #include<Windows.h>
 #include"hook.h"
 
 
-//--------È«¾Ö±äÁ¿---------
-//¼ÆÊ±Æ÷µÄÊ±¼ä¼ä¸ô
+//--------å…¨å±€å˜é‡---------
+//è®¡æ—¶å™¨çš„æ—¶é—´é—´éš”
 DWORD dwTimerElapse1;
 //DWORD dwTimerElapse2;
 DWORD dwTimerElapse3;
 
 
 
-//---------º¯Êı¶¨Òå--------
-//·µ»Ø·ÖÊı
+//---------å‡½æ•°å®šä¹‰--------
+//è¿”å›åˆ†æ•°
 int GetScore() { return score; }
 
-//·µ»ØÊ±¼ä
+//è¿”å›æ—¶é—´
 int GetSecond() { return second; }
 
 void CreateGame(HWND hwnd,
@@ -23,7 +23,7 @@ void CreateGame(HWND hwnd,
 	//DWORD dwInitTimerElapse2,
 	DWORD dwInitTimerElapse3,
 	int boundary_x, 
-	int boundary_y//±ß½ç
+	int boundary_y//è¾¹ç•Œ
 )
 { 
 	dwTimerElapse1 = dwInitTimerElapse1;
@@ -31,33 +31,33 @@ void CreateGame(HWND hwnd,
 	dwTimerElapse3 = dwInitTimerElapse3;
 	SetBoundary(boundary_x, boundary_y);
 
-	//ÉèÖÃ½ğ¿é±ß½ç×ø±ê
+	//è®¾ç½®é‡‘å—è¾¹ç•Œåæ ‡
 	SetGoldBoundary();
 
-	//Éú³É½ğ¿éµÄÊı¾İ½á¹¹
+	//ç”Ÿæˆé‡‘å—çš„æ•°æ®ç»“æ„
 	CreatAllGolds();
 
-	//Éú³É¹³×ÓµÄÊı¾İ½á¹¹
+	//ç”Ÿæˆé’©å­çš„æ•°æ®ç»“æ„
 	CreatHook();
 
-	//³õÊ¼»¯×ª¶¯Á¿ºÍ·½Ïò
+	//åˆå§‹åŒ–è½¬åŠ¨é‡å’Œæ–¹å‘
 	hooktoleft = 1;
 	angle = 0;
 	score = 0;
-	second = 120;
+	second = 20;
 	hookback = 0;
 	hookmove = 0;
 
-	// ´´½¨¼ÆÊ±Æ÷
-	// Ã¿¾­¹ı dwTimerElapse ºÁÃë£¬hwnd´°¿Ú£¨Ö÷´°¿Ú£©¾Í»áÊÕµ½Ò»¸öWM_TIMERÏûÏ¢¡£
-	// ¼ÆÊ±Æ÷ÊÇÇı¶¯±¾ÓÎÏ·½øĞĞµÄÖ÷ÒªÊ±¼äÏß¡£
+	// åˆ›å»ºè®¡æ—¶å™¨
+	// æ¯ç»è¿‡ dwTimerElapse æ¯«ç§’ï¼Œhwndçª—å£ï¼ˆä¸»çª—å£ï¼‰å°±ä¼šæ”¶åˆ°ä¸€ä¸ªWM_TIMERæ¶ˆæ¯ã€‚
+	// è®¡æ—¶å™¨æ˜¯é©±åŠ¨æœ¬æ¸¸æˆè¿›è¡Œçš„ä¸»è¦æ—¶é—´çº¿ã€‚
 	//SetTimer(hwnd, TIME_ID1, dwTimerElapse1, NULL);
 	//SetTimer(hwnd, TIME_ID2, dwTimerElapse2, NULL);
 	//SetTimer(hwnd, TIME_ID3, dwTimerElapse3, NULL);
 }
 
-//ÓÎÏ·¿ØÖÆµÄÖ÷ÒªÁ÷³Ì
-//µ±¼ÆÊ±Æ÷·¢ÉúÊ±½øĞĞµÄ´¦ÀíÂß¼­
+//æ¸¸æˆæ§åˆ¶çš„ä¸»è¦æµç¨‹
+//å½“è®¡æ—¶å™¨å‘ç”Ÿæ—¶è¿›è¡Œçš„å¤„ç†é€»è¾‘
 void OnRollTimer(HWND hwnd)
 {
 	    if (hookmove == 0&&hookback==0&&angle<pi)
@@ -91,34 +91,35 @@ void OnRollTimer(HWND hwnd)
 
 void OnSecondTimer(HWND hwnd)
 {
-	second--;
+	
 	if (GetSecond() == 0)
 	{
 		KillTimer(hwnd, TIME_ID1);
 		//KillTimer(hwnd, TIME_ID2);
 		KillTimer(hwnd, TIME_ID3);
 
-		//µ¯³ö·ÖÊı
-		MessageBox(0, score, "Your Score", 0);
+		//å¼¹å‡ºåˆ†æ•°
+		MessageBox(0, "Time Over!!!\nã„Ÿ( â–”, â–” )ã„ ","GameOver", 0);
 		ExitProcess(0);
 	}
+	second--;
 }
 
 
-//µ±ÓÃÓÚ²Ù×÷Ê±½øĞĞµÄÂß¼­´¦Àí
-//±¾ÓÎÏ·Ö»Ê¹ÓÃÁË¿Õ¸ñºÍ¼üÅÌµÄÏÂ¼ü¿ØÖÆ
+//å½“ç”¨äºæ“ä½œæ—¶è¿›è¡Œçš„é€»è¾‘å¤„ç†
+//æœ¬æ¸¸æˆåªä½¿ç”¨äº†ç©ºæ ¼å’Œé”®ç›˜çš„ä¸‹é”®æ§åˆ¶
 void OnKeyDown(DWORD vk,DWORD hwnd)
 {
 	switch (vk)//virtual key value
 	{
-		//¿ªÊ¼ÓÎÏ·
+		//å¼€å§‹æ¸¸æˆ
 	case VK_SPACE:
 		//KillTimer(hwnd, TIME_ID2);
 		SetTimer(hwnd, TIME_ID1, dwTimerElapse1, NULL);
 		SetTimer(hwnd, TIME_ID3, dwTimerElapse3, NULL);
 		break;
 
-		//¿ªÊ¼×¥È¡
+		//å¼€å§‹æŠ“å–
 	case VK_DOWN:
 		//KillTimer(hwnd, TIME_ID1);
 		hookmove = 1;

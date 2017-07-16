@@ -287,7 +287,7 @@ int CatchGold()
 
 int CatchBoundary()
 {
-	if ((int)hook->x >= (int)boundary->x || (int)hook->y >= (int)boundary->y || (int)hook->x == 0)
+	if ((int)hook->x >= (int)boundary->x || (int)hook->y >= (int)boundary->y || (int)hook->x <= 0)
 	{
 		hookback = 1;
 		return 1;

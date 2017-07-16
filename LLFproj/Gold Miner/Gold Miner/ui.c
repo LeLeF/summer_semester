@@ -11,7 +11,7 @@
 #define COLOR_Hook		RGB(0, 0, 0)
 #define COLOR_Background RGB(205, 129, 98)
 #define COLOR_BOUNDARY  RGB(205, 129, 98)
-#define COLOR_TEXT			RGB(255,216,230)
+#define COLOR_TEXT			RGB(0,0,139)
 
 //游戏参数设置
 #define INIT_TIMER_ELAPSE1 50
@@ -19,8 +19,7 @@
 #define INIT_TIMER_ELAPSE3 1000
 #define MAX_X		750	// 游戏界面大小
 #define MAX_Y		600	// 游戏界面大小
-#define HEIGHT		500
-#define WIDTH		500
+
 
 // 全局变量的定义
 HINSTANCE hinst; /// HINSTANCE是用来表示程序运行实例的【句柄】handle，某些API函数会使用到这个变量。instance 实例
@@ -66,8 +65,7 @@ int WINAPI WinMain(
 		IDC_CROSS);//【光标】
 				   // GetStockObject的功能是加载一个系统预定义（在栈中）的GDI对象，
 				   // 这里加载的是一个白色的画刷，有关画刷和GDI对象，详见GDI说明。
-	wc.hbrBackground = (HBRUSH)GetStockObject(
-		WHITE_BRUSH);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	// 窗口的菜单的资源名。
 	wc.lpszMenuName = "MainMenu";
 	// 给窗口类起一个名字，在创建窗口时需要这个名字。
@@ -165,84 +163,151 @@ void GamePaint(HWND hwnd)
 	hpenline= CreatePen(0, 1, COLOR_Hook);//钩子和定点间的连线
 	hBrushHook = CreateSolidBrush(COLOR_Hook);
 	hBackground= CreateSolidBrush(COLOR_Background);
-	hPenBoundary = CreatePen(0, 3, COLOR_BOUNDARY);//0代表实心，3表示粗细，3个像素
-
-	//HDC hdcBitmapSrc;
-	//HBITMAP hBitmap;
-	//HBITMAP hbmpMiner;
-	//BITMAP bmp;
-
-	//hbmpMiner = LoadImage(NULL, "背景.bmp",
-	//	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-
-	//hBitmap = CreateCompatibleBitmap(hdc, // 不能是hdcMem，否则会变成黑白2色位图
-	//	rect.right - rect.left, rect.bottom - rect.top);
-	//SelectObject(hdcmem, hBitmap);
-	//hdcBitmapSrc = CreateCompatibleDC(hdc);
-	//SelectObject(hdcBitmapSrc, hbmpMiner);
-	//GetObject(hbmpMiner, sizeof(BITMAP), &bmp);
-	//StretchBlt(hdcmem,
-	//	point.x, point.y,
-	//	WIDTH, HEIGHT,
-	//	hdcBitmapSrc,
-	//	0, 0, bmp.bmWidth, bmp.bmHeight,
-	//	SRCCOPY);
-
+	hPenBoundary = CreatePen(PS_NULL, 0, RGB(0, 0, 0));
 
 	//画背景
-	FillRect(hdcmem, &rect, (HBRUSH)hBackground);//填充一个矩形，全覆盖背景色
+	HBITMAP hbg;
+	BITMAP bm;
+	char *filename = "背景.bmp";//位图文件名 
+	hbg = (HBITMAP)LoadImage(GetModuleHandle(0), filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	GetObject(hbg, sizeof(BITMAP), (LPVOID)&bm);//获取位图尺寸
+	PAINTSTRUCT ps;
+	BeginPaint(hwnd, &ps);
+	SelectObject(hdcmem, hbg);
+	BitBlt(ps.hdc, 0, 0, bm.bmWidth, bm.bmHeight, hdcmem, 0, 0, SRCCOPY);
+	EndPaint(hwnd, &ps);
 
-	//画钩子
+	//画背景
+	//FillRect(hdcmem, &rect, (HBRUSH)hBackground);//填充一个矩形，全覆盖背景色
+
+	////画钩子
 	hOldBrush = (HBRUSH)SelectObject(hdcmem, hBrushHook);//选择刷
-	hOldPen = (HPEN)SelectObject(hdcmem, hpen);//选择笔
+	//hOldPen = (HPEN)SelectObject(hdcmem, hpen);//选择笔
 	lpHook = GetHook();//得到钩子坐标
 
-	Rectangle(hdcmem,
-		lpHook->x * CELL_PIXEL /*+ rectBoundary.left*/,
-		lpHook->y * CELL_PIXEL /*+ rectBoundary.top*/,
-		(lpHook->x + 1)*CELL_PIXEL /*+ rectBoundary.left*/,
-		(lpHook->y + 1)*CELL_PIXEL) /*+ rectBoundary.top)*/;
+	//Rectangle(hdcmem,
+	//	lpHook->x * CELL_PIXEL + rectBoundary.left,
+	//	lpHook->y * CELL_PIXEL + rectBoundary.top,
+	//	(lpHook->x + 1)*CELL_PIXEL + rectBoundary.left,
+	//	(lpHook->y + 1)*CELL_PIXEL + rectBoundary.top);
 	
+	 HBITMAP hBitmap;
+	 HBITMAP hOldBitmap;
+	 BITMAP bmp;
+	 HDC  hdcBitmapSrc;
+	 hBitmap = (HBITMAP)LoadImage(GetModuleHandle(0), "钩子.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	 hdcBitmapSrc = CreateCompatibleDC(hdc);
+	  SelectObject(hdcBitmapSrc, hBitmap);
+	  GetObject(hBitmap, sizeof(BITMAP), &bmp);
+	
+	 StretchBlt(hdcmem,
+		 lpHook->x, lpHook->y,
+		 bmp.bmWidth,bmp.bmHeight ,
+		 hdcBitmapSrc,
+		 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
+
+
+
+
 	//画钩子和定点间的连线
 	SelectObject(hdcmem, hpenline);
 	MoveToEx(hdcmem, point.x*CELL_PIXEL, point.y*CELL_PIXEL, NULL);
 	LineTo(hdcmem, lpHook->x*CELL_PIXEL, lpHook->y*CELL_PIXEL);
 
 	SelectObject(hdcmem, hpen);
+	
+	
 	//画金块
-	SelectObject(hdcmem, hBrushGold);
+	//SelectObject(hdcmem, hBrushGold);
+	HBITMAP hBitmap1;
+	BITMAP bmp1;
+	HDC  hdcBitmapSrc1;
+	hBitmap1 = (HBITMAP)LoadImage(GetModuleHandle(0), "金子1.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	hdcBitmapSrc1 = CreateCompatibleDC(hdc);
+	
+	HBITMAP hBitmap2;
+	BITMAP bmp2;
+	HDC  hdcBitmapSrc2;
+	hBitmap2 = (HBITMAP)LoadImage(GetModuleHandle(0), "金子2.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	hdcBitmapSrc2 = CreateCompatibleDC(hdc);
+
+	HBITMAP hBitmap3;
+	BITMAP bmp3;
+	HDC  hdcBitmapSrc3;
+	hBitmap3 = (HBITMAP)LoadImage(GetModuleHandle(0), "金子3.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	hdcBitmapSrc3 = CreateCompatibleDC(hdc);
+	
+	//SelectObject(hdcBitmapSrc1, hBitmap1);
+	//GetObject(hBitmap1, sizeof(BITMAP), &bmp1);
+
+	/*SelectObject(hdcBitmapSrc2, hBitmap2);
+	GetObject(hBitmap2, sizeof(BITMAP), &bmp2);*/
+
+	//SelectObject(hdcBitmapSrc3, hBitmap3);
+	//GetObject(hBitmap3, sizeof(BITMAP), &bmp3);
+
+	/*StretchBlt(hdcmem,
+		pGold->x, pGold->y,
+		bmp1.bmWidth, bmp1.bmHeight,
+		hdcBitmapSrc1,
+		0, 0, bmp1.bmWidth, bmp1.bmHeight, SRCCOPY);*/
+
+	//StretchBlt(hdcmem,
+	//	pGold->x, pGold->y,
+	//	bmp2.bmWidth, bmp2.bmHeight,
+	//	hdcBitmapSrc2,
+	//	0, 0, bmp2.bmWidth, bmp2.bmHeight, SRCCOPY);
+
+	//StretchBlt(hdcmem,
+	//	pGold->x, pGold->y,
+	//	bmp3.bmWidth, bmp3.bmHeight,
+	//	hdcBitmapSrc3,
+	//	0, 0, bmp3.bmWidth, bmp3.bmHeight, SRCCOPY);
+
 	for (i = 0; i < num; i++)
 	{
 		p = GetGold(i);
 		pGold = GetGoldAt(i);
-		if(pGold->x!=0||pGold->y!=0)
-		Ellipse/*Rectangle*/(hdcmem,
-			(p->size+pGold->x )* CELL_PIXEL + rectBoundary.left,
-			(p->size +pGold->y )* CELL_PIXEL + rectBoundary.top,
-			(-p->size +(pGold->x + 1))*CELL_PIXEL + rectBoundary.left,
-			(-p->size +(pGold->y + 1))*CELL_PIXEL + rectBoundary.top);
+		if (pGold->x != 0 || pGold->y != 0)
+			//Ellipse/*Rectangle*/(hdcmem,
+			//	(p->size+pGold->x )* CELL_PIXEL + rectBoundary.left,
+			//	(p->size +pGold->y )* CELL_PIXEL + rectBoundary.top,
+			//	(-p->size +(pGold->x + 1))*CELL_PIXEL + rectBoundary.left,
+			//	(-p->size +(pGold->y + 1))*CELL_PIXEL + rectBoundary.top);
+		{
+			if (p->size == size1)
+			{
+				SelectObject(hdcBitmapSrc1, hBitmap1);
+				GetObject(hBitmap1, sizeof(BITMAP), &bmp1);
+				StretchBlt(hdcmem,
+					pGold->x, pGold->y,
+					bmp1.bmWidth, bmp1.bmHeight,
+					hdcBitmapSrc1,
+					0, 0, bmp1.bmWidth, bmp1.bmHeight, SRCCOPY);
+			}
+			else if (p->size == size2)
+			{
+				SelectObject(hdcBitmapSrc2, hBitmap2);
+				GetObject(hBitmap2, sizeof(BITMAP), &bmp2);
+				StretchBlt(hdcmem,
+					pGold->x, pGold->y,
+					bmp2.bmWidth, bmp2.bmHeight,
+					hdcBitmapSrc2,
+					0, 0, bmp2.bmWidth, bmp2.bmHeight, SRCCOPY);
+			}
+			else if (p->size == size3)
+			{
+				SelectObject(hdcBitmapSrc3, hBitmap3);
+				GetObject(hBitmap3, sizeof(BITMAP), &bmp3);
+				StretchBlt(hdcmem,
+					pGold->x, pGold->y,
+					bmp3.bmWidth, bmp3.bmHeight,
+					hdcBitmapSrc3,
+					0, 0, bmp3.bmWidth, bmp3.bmHeight, SRCCOPY);
+			}
+		}
 	}
 	
-	//HDC hdcBitmapSrc;
-	//HBITMAP hBitmap;
-	//HBITMAP hbmpMiner;
-	//BITMAP bmp;
-
-	//hbmpMiner = LoadImage(NULL, "背景.bmp",
-	//	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-	//
-	//hBitmap = CreateCompatibleBitmap(hdc, // 不能是hdcMem，否则会变成黑白2色位图
-	//	rect.right - rect.left, rect.bottom - rect.top);
-	//SelectObject(hdcmem, hBitmap);
-	//hdcBitmapSrc = CreateCompatibleDC(hdc);
-	//SelectObject(hdcBitmapSrc, hbmpMiner);
-	//GetObject(hbmpMiner, sizeof(BITMAP), &bmp);
-	//StretchBlt(hdcmem,
-	//	point.x, point.y,
-	//	WIDTH, HEIGHT,
-	//	hdcBitmapSrc,
-	//	0, 0, bmp.bmWidth, bmp.bmHeight,
-	//	SRCCOPY);
 
 
 	//画边框
@@ -258,22 +323,30 @@ void GamePaint(HWND hwnd)
 
 	//写一行字
 	// 创建了一个字体对象
-	hFont = CreateFont(48, 0, 0, 0, FW_DONTCARE, 0, 1, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
-		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Consolas"));
+	//hFont = CreateFont(48, 0, 0, 0, FW_DONTCARE, 0, 1, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+	//	CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Consolas"));
 
-	// 将这个FONT对象放入DC中
-	if (hOldFont = (HFONT)SelectObject(hdcmem, hFont))
-	{
-		CHAR szSourceInfo[1024];
-		wsprintf(szSourceInfo, "Sorce %d  Second %d   ", GetScore(),GetSecond());
-		// 设置输出颜色
-		SetTextColor(hdcmem, COLOR_TEXT);
-		// 输出字符串。
-		TextOut(hdcmem, rectBoundary.left + 3, rectBoundary.bottom + 3,
-			szSourceInfo, lstrlen(szSourceInfo));
-		// 输出完成，将原来的字体对象放回DC中
-		SelectObject(hdcmem, hOldFont);
-	}
+	//// 将这个FONT对象放入DC中
+	//if (hOldFont = (HFONT)SelectObject(hdcmem, hFont))
+	//{
+	//	CHAR szSourceInfo[1024];
+	//	wsprintf(szSourceInfo, "Sorce %d  Second %d   ", GetScore(),GetSecond());
+	//	// 设置输出颜色
+	//	SetTextColor(hdcmem, COLOR_TEXT);
+	//	// 输出字符串。
+	//	TextOut(hdcmem, rectBoundary.left + 3, rectBoundary.bottom + 3,
+	//		szSourceInfo, lstrlen(szSourceInfo));
+	//	// 输出完成，将原来的字体对象放回DC中
+	//	SelectObject(hdcmem, hOldFont);
+	//}
+	CHAR debug_info[1024];
+	hFont = CreateFont(20, 0, 0, 0, FW_DONTCARE, 0, FALSE, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Consolas"));
+	wsprintf(debug_info, "Sorce %d  Second %d   ", GetScore(), GetSecond());
+	SelectObject(hdcmem, hFont);
+	SetTextColor(hdcmem, RGB(0, 0, 139));
+	TextOut(hdcmem, 10, 10, debug_info, strlen(debug_info));
+
 
 	// 在内存DC中画完，一次输出的窗口DC上。
 	BitBlt(hdc,
@@ -306,10 +379,10 @@ void ReSizeGameWnd(HWND hwnd)
 	PGAME_COORD pCoordBoundary = GetBoundary();
 
 	// 设置游戏边界
-	rectBoundary.left = 10;
-	rectBoundary.top = 10;
-	rectBoundary.right = 10 + CELL_PIXEL*(pCoordBoundary->x + 1);
-	rectBoundary.bottom = 10 + CELL_PIXEL*(pCoordBoundary->y + 1);
+	rectBoundary.left = 0;
+	rectBoundary.top = 0;
+	rectBoundary.right = CELL_PIXEL*(pCoordBoundary->x + 1);
+	rectBoundary.bottom =CELL_PIXEL*(pCoordBoundary->y + 1);
 
 	// 计算上下左右角的位置
 	ptLeftTop.x = rectBoundary.left;
@@ -325,7 +398,7 @@ void ReSizeGameWnd(HWND hwnd)
 		rectWindow.left,
 		rectWindow.top,
 		ptLeftTop.x - rectWindow.left + ptRightBottom.x - rectWindow.left, // 保存边界和左右两边边框相等。
-		rectBoundary.bottom + 120, //给积分信息留出显示空间。
+		rectBoundary.bottom+40, //给积分信息留出显示空间。
 		TRUE);
 }
 

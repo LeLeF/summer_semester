@@ -5,7 +5,7 @@
 //定义常量
 #define size1 12//2//1//小金块尺寸
 #define size2 25//3//2//中金块尺寸
-#define size3 45//5//4//大金块尺寸
+#define size3 60//5//4//大金块尺寸
 #define num 20//金块总数
 #define num1 10//小金块数量
 #define num2 6//中金块数量

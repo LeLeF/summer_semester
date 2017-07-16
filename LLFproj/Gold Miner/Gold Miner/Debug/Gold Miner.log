@@ -1,4 +1,10 @@
-﻿  gold_and_hook.c
+﻿  ui.c
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\ui.c(195): warning C4101: “hOldBitmap”: 未引用的局部变量
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\ui.c(141): warning C4101: “hOldFont”: 未引用的局部变量
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\ui.c(134): warning C4101: “hOldPen”: 未引用的局部变量
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\ui.c(437): warning C4047: “函数”:“DWORD”与“HWND”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\ui.c(437): warning C4024: “OnKeyDown”: 形参和实参 2 的类型不同
+  gold_and_hook.c
 c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(14): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
 c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(161): warning C4305: “+=”: 从“double”到“float”截断
@@ -15,5 +21,11 @@ c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold
 c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(223): warning C4244: “-=”: 从“double”转换到“int”，可能丢失数据
 c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(234): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
 c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(235): warning C4244: “-=”: 从“double”转换到“int”，可能丢失数据
+  game_operation.c
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(118): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(118): warning C4024: “SetTimer”: 形参和实参 1 的类型不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(119): warning C4047: “函数”:“HWND”与“DWORD”的间接级别不同
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\game_operation.c(119): warning C4024: “SetTimer”: 形参和实参 1 的类型不同
+  正在生成代码...
   Gold Miner.vcxproj -> C:\Users\lenovo\documents\visual studio 2015\Projects\Gold Miner\Debug\Gold Miner.exe
   Gold Miner.vcxproj -> C:\Users\lenovo\documents\visual studio 2015\Projects\Gold Miner\Debug\Gold Miner.pdb (Partial PDB)
