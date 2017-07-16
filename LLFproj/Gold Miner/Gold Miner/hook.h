@@ -1,10 +1,11 @@
 #include<Windows.h>
 #include<math.h>
 #include"LinkList.h"
+//---------宏定义---------
 //定义常量
-#define size1 1//小金块尺寸
-#define size2 2//中金块尺寸
-#define size3 4//大金块尺寸
+#define size1 12//2//1//小金块尺寸
+#define size2 25//3//2//中金块尺寸
+#define size3 45//5//4//大金块尺寸
 #define num 20//金块总数
 #define num1 10//小金块数量
 #define num2 6//中金块数量
@@ -12,10 +13,17 @@
 #define score1 20//小金块分数
 #define score2 100//中金块分数
 #define score3 500//大金块分数
-#define hookstartlen 5//初始钩子的绳长
-#define rotation 0.0314159//每0.1秒旋转的角度1.8°（弧度制）
-#define hspeed 0.3//钩子下放时的速度每0.1秒
-#define pi 3/*.14159*///180°的弧度
+#define hookstartlen 50//初始钩子的绳长
+#define rotation 0.0314159/4//每0.1秒旋转的角度1.8°（弧度制）
+#define hspeed 3.5//钩子下放时的速度
+#define pi 3.1//180°的弧度
+
+//计时器ID
+#define TIME_ID1 10
+//#define TIME_ID2 20
+#define TIME_ID3 30
+
+
 //游戏坐标
 typedef struct _GAME_COORD
 {
@@ -39,6 +47,9 @@ int score;
 //钩子
 PGAME_COORD hook;
 
+//钩子移动前的位置
+PGAME_COORD exhook;
+
 //金块（链表）
 PLIST gold_list;
 
@@ -57,8 +68,12 @@ float angle;
 //矿工所在的定点
 GAME_COORD point;
 
-//游戏状态
-int GameState;
+//倒计时器
+int second;
+
+//钩子移动的状态
+int hookback;
+int hookmove;
 
 //---------函数声明--------
 
@@ -111,10 +126,10 @@ void HookBack();
 int CoordEqual(PGAME_COORD hook, PGold g);
 
 //抓取金子
-void CatchGold();
+int CatchGold();
 
 //碰到边界
-void CatchBoundary();
+int CatchBoundary();
 
 /// game_opration.c 中的接口函数
 
@@ -124,12 +139,16 @@ int GetSecond();
 
 void CreateGame(HWND hwnd,
 	DWORD dwInitTimerElapse1,
-	DWORD dwInitTimerElapse2,
+	//DWORD dwInitTimerElapse2,
 	DWORD dwInitTimerElapse3,
 	int boundary_x, 
 	int boundary_y//边界
 	);
-void OnTimer(DWORD hwnd, UINT_PTR timeid);
+void OnRollTimer(HWND hwnd);
 
-void OnKeyDown(DWORD vk);
+//void OnMoveTimer(HWND hwnd);
+
+void OnSecondTimer(HWND hwnd);
+
+void OnKeyDown(DWORD vk, DWORD hwnd);
 

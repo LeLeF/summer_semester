@@ -1,4 +1,5 @@
 #include"hook.h"
+#include"math.h"
 
 
 //---------内部函数声明---------
@@ -9,17 +10,18 @@ int CoordEqual(PGAME_COORD hook, PGold g);
 //判断是否捞到金块
 int CoordEqual(PGAME_COORD hook, PGold g)
 {
-	int flag = 0;
-	for(int i=-(1/2)*(g->size-1);i<= (1 / 2)*(g->size - 1);i++)
-		for (int j = -(1 / 2)*(g->size - 1); j <= (1 / 2)*(g->size - 1); j++)
-		{
-			if ((int)(hook->x) == g->coord->x + i&&
-				(int)(hook->y) == g->coord->y + j)
-				flag++;
-		}
-	if(flag!=0)
+	float d, r;
+	r = g->size*1.0;
+	d = sqrt((hook->x - (g->coord->x))*(hook->x - (g->coord->x)) +
+		(hook->y - (g->coord->y))*(hook->y - (g->coord->y))
+	);
+	if (d <= r)
+	{
+		hookback=1;
 		return 1;
+	}
 	else return 0;
+
 
 }
 
@@ -59,7 +61,7 @@ PGold CreatGold(int size)
 	g->coord = (PGAME_COORD)malloc(sizeof(GAME_COORD));
 	g->size = size;
 	g->coord->x = rand()%(goldbounary->x);
-	g->coord->y = rand() %(60-20)+20/*( (boundary->y - goldbounary->y)+ goldbounary->y)*/;
+	g->coord->y = rand() %(600-200)+200/*( (boundary->y - goldbounary->y)+ goldbounary->y)*/;
 	return g;
 }
 
@@ -136,8 +138,11 @@ void CreatHook()
 	hook= (PGAME_COORD)malloc(sizeof(GAME_COORD));
 	hook->x = point.x + hookstartlen;
 	hook->y = point.y;
-	hooktoleft = 1;
 
+	//创建钩子原位置
+	exhook = (PGAME_COORD)malloc(sizeof(GAME_COORD));
+	exhook->x = hook->x;
+	exhook->y = hook->y;
 }
 
 //获得钩子坐标
@@ -146,29 +151,31 @@ PGAME_COORD GetHook()
 	return hook;
 }
 
+
 //钩子转动
 void HookRoll()
 {
-	if (hooktoleft = 1 && angle < pi)
+
+	if (hooktoleft == 1 && angle < pi)
 	{
 		angle += rotation;
 		hook->x = point.x + hookstartlen*cos(angle);
 		hook->y = point.y + hookstartlen*sin(angle);
 	}
-	else if (hooktoleft = 1 && angle >= pi)
+	else if (hooktoleft == 1 && angle >= pi)
 	{
 		angle = 0;
 		hooktoleft = 0;
 		hook->x = point.x - hookstartlen;
 		hook->x = point.y;
 	}
-	else if (hooktoleft = 0 && angle < pi)
+	else if (hooktoleft == 0 && angle < pi)
 	{
 		angle += rotation;
 		hook->x = point.x - hookstartlen*cos(angle);
 		hook->y = point.y + hookstartlen*sin(angle);
 	}
-	else if (hooktoleft = 0 && angle >= pi)
+	else if (hooktoleft == 0 && angle >=pi)
 	{
 		angle = 0;
 		hooktoleft = 1;
@@ -181,70 +188,111 @@ void HookRoll()
 //钩子移动
 void HookMove()
 {
-	if (hooktoleft = 1 && angle < pi)
+	if (hooktoleft == 1 && angle < pi)
 	{
-		hook->x += hspeed*cos(angle);
-		hook->y += hspeed*sin(angle);
+		hook->x = (hook->x + hspeed*cos(angle));
+		hook->y = (hook->y + hspeed*sin(angle));
 	}
-	else if (hooktoleft = 0 && angle < pi)
+	else if (hooktoleft == 1 && angle >= pi)
 	{
-		hook->x -= hspeed*cos(angle);
-		hook->y += hspeed*sin(angle);
+		angle = 0;
+		hooktoleft = 0;
+		hook->x = point.x - hookstartlen;
+		hook->x = point.y;
+	}
+	else if (hooktoleft == 0 && angle < pi)
+	{
+		hook->x = (hook->x - hspeed*cos(angle));
+		hook->y = (hook->y + hspeed*sin(angle));
+	}
+	else if (hooktoleft == 0 && angle >= pi)
+	{
+		angle = 0;
+		hooktoleft = 1;
+		hook->x = point.x + hookstartlen;
+		hook->x = point.y;
 	}
 }
 
 //钩子回到初始点
 void HookBack()
 {
-	if (hooktoleft = 1 && angle < pi)
+	if ((hooktoleft == 1 && angle < pi))
 	{
 		hook->x -= hspeed*cos(angle);
 		hook->y -= hspeed*sin(angle);
+		if (sqrt((hook->x - point.x)*(hook->x - point.x) + (hook->y - point.y)*(hook->y - point.y)) <= hookstartlen)
+		{
+
+			hookback = 0;
+			hookmove = 0;
+		
+		}
 	}
-	else if (hooktoleft = 0 && angle < pi)
+	else if ((hooktoleft == 0 && angle < pi))
 	{
 		hook->x += hspeed*cos(angle);
 		hook->y -= hspeed*sin(angle);
+		if (sqrt((hook->x - point.x)*(hook->x - point.x) + (hook->y - point.y)*(hook->y - point.y)) <= hookstartlen)
+		{
+			hookback = 0;
+			hookmove = 0;
+		}
 	}
-	else if(hook->x == point.x&&hook->y==point.y)
-	GameState = 1;
-
+	else if (sqrt((hook->x-point.x)*(hook->x - point.x)+(hook->y - point.y)*(hook->y - point.y))<=hookstartlen)
+	{
+		hookback = 0;
+		hookmove = 0;
+		
+	}
 }
 
-void CatchGold()
+int CatchGold()
 {
 	PGold p;
-	p= (PGold)malloc(sizeof(struct _Gold));
+	int flag=0;
+	p = (PGold)malloc(sizeof(struct _Gold));
 	for (int i = 0; i < num; i++)
 	{
 		p = ListGetAt(gold_list, i);
-		if (CoordEqual(hook,p))
+		if (CoordEqual(hook, p))
 		{
-			p->coord->x = 0;
-			p->coord->y = 0;
+			p->coord->x =0;
+			p->coord->y =0;
 			switch (p->size)
 			{
-			case 1:
+			case size1:
 				score += score1;
 				break;
-			case 2:
+			case size2:
 				score += score2;
 				break;
-			case 3:
+			case size3:
 				score += score3;
 				break;
 			}
-			HookBack();
 			break;
+			flag++;
+		
 		}
-	}
 
+	}
+	if (flag != 0)
+	{
+		hookback = 1;
+		return 1;
+	}
+	else return 0;
 }
 
-void CatchBoundary()
+int CatchBoundary()
 {
-	if ((int)hook->x == (int)boundary->x || (int)hook->y == (int)boundary->y || (int)hook->x == 0)
+	if ((int)hook->x >= (int)boundary->x || (int)hook->y >= (int)boundary->y || (int)hook->x == 0)
 	{
-		HookBack();
+		hookback = 1;
+		return 1;
+		
 	}
+	else return 0;
+	
 }

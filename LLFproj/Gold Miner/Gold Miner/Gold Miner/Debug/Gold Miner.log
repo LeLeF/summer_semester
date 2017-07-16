@@ -1,0 +1,19 @@
+﻿  gold_and_hook.c
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(14): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(161): warning C4305: “+=”: 从“double”到“float”截断
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(162): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(163): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(174): warning C4305: “+=”: 从“double”到“float”截断
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(175): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(176): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(193): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(194): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(205): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(206): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(222): warning C4244: “-=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(223): warning C4244: “-=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(234): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+c:\users\lenovo\documents\visual studio 2015\projects\gold miner\gold miner\gold_and_hook.c(235): warning C4244: “-=”: 从“double”转换到“int”，可能丢失数据
+  Gold Miner.vcxproj -> C:\Users\lenovo\documents\visual studio 2015\Projects\Gold Miner\Debug\Gold Miner.exe
+  Gold Miner.vcxproj -> C:\Users\lenovo\documents\visual studio 2015\Projects\Gold Miner\Debug\Gold Miner.pdb (Partial PDB)

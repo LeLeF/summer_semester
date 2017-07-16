@@ -4,29 +4,31 @@
 #include"hook.h"
 
 // 画图时使用的表示图形的直径像素点个数。
-#define CELL_PIXEL			8
+#define CELL_PIXEL			1
 
 // 用来绘图的颜色
 #define COLOR_Gold		RGB(255, 215, 0)
-#define COLOR_Hook		RGB(0, 0,0)
+#define COLOR_Hook		RGB(0, 0, 0)
 #define COLOR_Background RGB(205, 129, 98)
 #define COLOR_BOUNDARY  RGB(205, 129, 98)
 #define COLOR_TEXT			RGB(255,216,230)
 
 //游戏参数设置
-#define INIT_TIMER_ELAPSE1 100
-#define INIT_TIMER_ELAPSE2 120
+#define INIT_TIMER_ELAPSE1 50
+//#define INIT_TIMER_ELAPSE2 50
 #define INIT_TIMER_ELAPSE3 1000
-#define MAX_X		60	// 游戏界面大小
-#define MAX_Y		60	// 游戏界面大小
+#define MAX_X		750	// 游戏界面大小
+#define MAX_Y		600	// 游戏界面大小
+#define HEIGHT		500
+#define WIDTH		500
 
 // 全局变量的定义
 HINSTANCE hinst; /// HINSTANCE是用来表示程序运行实例的【句柄】handle，某些API函数会使用到这个变量。instance 实例
 RECT rectBoundary;//rectangle 一种结构体
-INT timeid;//计时器ID
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int);
 LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM);
+
 
 int WINAPI WinMain(
 	HINSTANCE hinstance, // 程序实例句柄，在程序运行，进程创建后，由操作系统向应用程序传入【一般不管】
@@ -165,6 +167,28 @@ void GamePaint(HWND hwnd)
 	hBackground= CreateSolidBrush(COLOR_Background);
 	hPenBoundary = CreatePen(0, 3, COLOR_BOUNDARY);//0代表实心，3表示粗细，3个像素
 
+	//HDC hdcBitmapSrc;
+	//HBITMAP hBitmap;
+	//HBITMAP hbmpMiner;
+	//BITMAP bmp;
+
+	//hbmpMiner = LoadImage(NULL, "背景.bmp",
+	//	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+
+	//hBitmap = CreateCompatibleBitmap(hdc, // 不能是hdcMem，否则会变成黑白2色位图
+	//	rect.right - rect.left, rect.bottom - rect.top);
+	//SelectObject(hdcmem, hBitmap);
+	//hdcBitmapSrc = CreateCompatibleDC(hdc);
+	//SelectObject(hdcBitmapSrc, hbmpMiner);
+	//GetObject(hbmpMiner, sizeof(BITMAP), &bmp);
+	//StretchBlt(hdcmem,
+	//	point.x, point.y,
+	//	WIDTH, HEIGHT,
+	//	hdcBitmapSrc,
+	//	0, 0, bmp.bmWidth, bmp.bmHeight,
+	//	SRCCOPY);
+
+
 	//画背景
 	FillRect(hdcmem, &rect, (HBRUSH)hBackground);//填充一个矩形，全覆盖背景色
 
@@ -192,12 +216,34 @@ void GamePaint(HWND hwnd)
 		p = GetGold(i);
 		pGold = GetGoldAt(i);
 		if(pGold->x!=0||pGold->y!=0)
-		Ellipse(hdcmem, 
+		Ellipse/*Rectangle*/(hdcmem,
 			(p->size+pGold->x )* CELL_PIXEL + rectBoundary.left,
 			(p->size +pGold->y )* CELL_PIXEL + rectBoundary.top,
 			(-p->size +(pGold->x + 1))*CELL_PIXEL + rectBoundary.left,
 			(-p->size +(pGold->y + 1))*CELL_PIXEL + rectBoundary.top);
 	}
+	
+	//HDC hdcBitmapSrc;
+	//HBITMAP hBitmap;
+	//HBITMAP hbmpMiner;
+	//BITMAP bmp;
+
+	//hbmpMiner = LoadImage(NULL, "背景.bmp",
+	//	IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	//
+	//hBitmap = CreateCompatibleBitmap(hdc, // 不能是hdcMem，否则会变成黑白2色位图
+	//	rect.right - rect.left, rect.bottom - rect.top);
+	//SelectObject(hdcmem, hBitmap);
+	//hdcBitmapSrc = CreateCompatibleDC(hdc);
+	//SelectObject(hdcBitmapSrc, hbmpMiner);
+	//GetObject(hbmpMiner, sizeof(BITMAP), &bmp);
+	//StretchBlt(hdcmem,
+	//	point.x, point.y,
+	//	WIDTH, HEIGHT,
+	//	hdcBitmapSrc,
+	//	0, 0, bmp.bmWidth, bmp.bmHeight,
+	//	SRCCOPY);
+
 
 	//画边框
 	SelectObject(hdcmem, hPenBoundary);
@@ -219,7 +265,7 @@ void GamePaint(HWND hwnd)
 	if (hOldFont = (HFONT)SelectObject(hdcmem, hFont))
 	{
 		CHAR szSourceInfo[1024];
-		wsprintf(szSourceInfo, "Sorce %d Second %d", GetScore(),GetSecond());
+		wsprintf(szSourceInfo, "Sorce %d  Second %d   ", GetScore(),GetSecond());
 		// 设置输出颜色
 		SetTextColor(hdcmem, COLOR_TEXT);
 		// 输出字符串。
@@ -289,23 +335,6 @@ LONG CALLBACK MainWndProc(
 	WPARAM wParam, // 消息参数，不同的消息有不同的意义，详见MSDN中每个消息的文档
 	LPARAM lParam) // 消息参数，不同的消息有不同的意义，详见MSDN中每个消息的文档
 {
-	//根据游戏状态选择计时器
-	switch (GameState)
-	{
-	case 0:
-		timeid = 30;
-		break;
-	case 1:
-		timeid = 10;
-		break;
-	case 2:
-		timeid = 20;
-		break;
-	case 3:
-		timeid = 0;
-		break;
-	}
-	
 	// 注意，是switch-case, 每次这个函数被调用，只会落入到一个case中。
 	switch (msg)
 	{
@@ -314,7 +343,7 @@ LONG CALLBACK MainWndProc(
 	case WM_CREATE:
 		CreateGame(hwnd,
 			INIT_TIMER_ELAPSE1,
-			INIT_TIMER_ELAPSE2,
+			//INIT_TIMER_ELAPSE2,
             INIT_TIMER_ELAPSE3,
 			MAX_X,
 			MAX_Y//边界
@@ -332,19 +361,37 @@ LONG CALLBACK MainWndProc(
 
 	case WM_KEYDOWN://键盘处理
 
-		OnKeyDown(wParam);
-		//OnTimer(hwnd, timeid);
+		OnKeyDown(wParam,hwnd);
 		GamePaint(hwnd);
 		break;
 
 	case WM_LBUTTONDOWN:
-		OnTimer(hwnd,timeid);
+		//OnTimer(hwnd);
 		GamePaint(hwnd);
 		break;
 
 	case WM_TIMER://计时器
-		OnTimer(hwnd, timeid);
-		GamePaint(hwnd);
+	{
+		switch (wParam)
+		{
+		case TIME_ID1 :
+			OnRollTimer(hwnd);
+			GamePaint(hwnd);
+			break;
+
+		/*case TIME_ID2 :
+			OnMoveTimer(hwnd);
+			GamePaint(hwnd);
+			break;*/
+		
+		case TIME_ID3 :
+			OnSecondTimer(hwnd);
+			GamePaint(hwnd);
+			break;
+
+		}
+	
+	}
 		break;
 
 	case WM_DESTROY://窗口关闭，结束进程
@@ -354,6 +401,9 @@ LONG CALLBACK MainWndProc(
 	default:
 		break;
 	}
+
+	
+
 	return DefWindowProc(hwnd,
 		msg,
 		wParam,
