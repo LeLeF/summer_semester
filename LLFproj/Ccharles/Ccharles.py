@@ -60,7 +60,7 @@ ball4 = pygame.image.load('image/ball4.bmp').convert()
 ball4.set_colorkey((255,255,255))
 xball4 = ball4.get_height()
 yball4 = ball4.get_width()
-#第五个球 星星
+#星星球
 ball5 = pygame.image.load('image/ball5.bmp').convert()
 ball5.set_colorkey((255,255,255))
 xball5 = ball5.get_height()
@@ -81,15 +81,15 @@ sprites_dict = {'ball1':ball4_list, 'star ball': ball5_list}
 
 #初始化游戏数据
 n = 1#初始球 
-n_ball = 1 #当前球
-tp_ball = 1 #下一个球
+n_ball = 1 #下一个球
+tp_ball = 1 #当前球
 level = 1 #级别
 t = 2000 #计时间隔
 seconds = 0 #时间
 scores = 0 #分数
 catch_star_ball = 0 #是否碰到星星
 
-#游戏逻辑
+
 #状态量转为字符以便应用字典
 def one_num_to_str(n):
     if n == 0:
@@ -115,26 +115,26 @@ def one_num_to_str(n):
 
 #def函数定义
 
-#整型转换为字符
+#整型转换为字符以便应用字典
 def int_to_str(n):
     a = one_num_to_str(n/1000) + one_num_to_str((n/100)%10) + one_num_to_str((n/10)%10) + one_num_to_str(n%10)
     return a
 
 #转换球
-def change_ball(tp_ball, n_ball, n, special_mode = 0):#判断是否是星星球
-    a = 1
-    b = 1    
-    if special_mode:
+def change_ball(tp_ball, n_ball, n, special_mode = 0):
+    a = 1#存储运动方向以及球编号的变化
+    b = 1#存储运动方向以及球编号的变化
+    if special_mode:#判断是否是星星球
         key = 'star ball'
         key2 = 'star ball'
         a = -a
         if (seconds % 2):
             b = -b
     else:
-        key = one_num_to_str(tp_ball)
-        key2 = 'ball' + int_to_str(n_ball)
+        key = one_num_to_str(tp_ball)#存储当前球
+        key2 = 'ball' + int_to_str(n_ball)#存储下一个球
 
-#设置二维列表存储八个方向
+#设置字典中的球的各项数据，生成新球
     sprites_dict[key2] = [0,0,0,0,0,0,0,0]
     sprites_dict[key2][0] = (100 + n)
     sprites_dict[key2][1] = (200 + n/3)
@@ -145,11 +145,11 @@ def change_ball(tp_ball, n_ball, n, special_mode = 0):#判断是否是星星球
     sprites_dict[key2][6] = balls_dict[key][6]
     sprites_dict[key2][7] = pygame.Rect((100,200),(balls_dict[key][4],balls_dict[key][5]))
     tp_ball += 1
-    if tp_ball == 5:
+    if tp_ball == 5:#如果生成星星球，则下一个生成黄球
         tp_ball = 1
     return tp_ball
 
-#游戏结束
+#游戏结束的逻辑
 def game_over():
     #soundoverwav.play(1)
     size = 48
@@ -197,6 +197,8 @@ pygame.time.set_timer(USEREVENT, t)
 
 pygame.time.set_timer(USEREVENT+1, 1000) 
 
+#游戏逻辑
+
 while 1:
     #clock.tick(100)
     
@@ -216,25 +218,25 @@ while 1:
     for key in sprites_dict:#设置方向转换
 
         sprite = sprites_dict[key]
-
+#若碰到边界则反向运动
         if (sprite[0] + sprite[4])>xmax or sprite[0]<0:
             sprite[2] = -sprite[2]
         if (sprite[1] + sprite[5])>ymax or sprite[1]<0:
             sprite[3] = -sprite[3]
-
+#改变坐标位置
         sprite[0] += (sprite[2])
         sprite[1] += (sprite[3])
-
+#绘出球的图
         screen.blit(sprite[6], (sprite[0],sprite[1]))
     
         sprite[7] = pygame.Rect((sprite[0], sprite[1]),(sprite[4],sprite[5]))
-
+#若鼠标碰到球
         if sprite[7].collidepoint(xy):
             if key == 'star ball':#得到星星球加五分
                 scores += 5
                 catch_star_ball = 1
                 soundwav.play()
-            else:
+            else:#若是其他球则游戏结束，初始化数据
                 game_over()
                 level = 1
                 n_ball = 1
@@ -243,12 +245,12 @@ while 1:
                 sprites_dict = {'ball1':ball1_list, 'star ball': ball5_list}
                 pygame.time.set_timer(USEREVENT, t)
                 break
-
+#若碰到星星球，则重新生成一个星星球
     if catch_star_ball:
         del sprites_dict['star ball']
         catch_star_ball = 0
         change_ball(0, 0, n, 1)
-
+#获取游戏状态
     for e in pygame.event.get():
         if e.type == QUIT:
             exit()
@@ -270,7 +272,7 @@ while 1:
 
     show_scores(scores)
 
-    screen.blit(ball_begin, ((10+ n),(50 + n)))
+    screen.blit(ball_begin, ((100+ n),(200 + n/3)))
 
     pygame.display.flip()
 
